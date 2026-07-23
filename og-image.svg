@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Nội Thất Anh Chi">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#171411" />
+      <stop offset="100%" stop-color="#3d2c20" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <circle cx="1010" cy="120" r="220" fill="rgba(214,177,135,0.16)" />
+  <circle cx="120" cy="560" r="180" fill="rgba(255,248,239,0.08)" />
+  <text x="90" y="250" fill="#fff8ef" font-family="Georgia, serif" font-size="72" font-weight="700">Nội Thất Anh Chi</text>
+  <text x="90" y="330" fill="#d6b187" font-family="Arial, sans-serif" font-size="36">Thiết kế thi công nội thất cao cấp</text>
+  <text x="90" y="390" fill="#efe2d2" font-family="Arial, sans-serif" font-size="28">Nhà ở • Căn hộ • Biệt thự • Văn phòng</text>
+</svg>
