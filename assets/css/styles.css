@@ -82,7 +82,49 @@ a {
   position: sticky;
   top: 0;
   z-index: 10;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
+}
+
+/* CSS cho Form Tư Vấn Zalo */
+.cta-section {
+  margin: 80px auto;
+  padding: 60px;
+  background: #f8f6f4;
+  border-radius: 16px;
+}
+.cta-section > div {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+.form-success {
+  display: none;
+  margin-top: 30px;
+  color: #2e7d32;
+  font-size: 18px;
+  font-weight: 600;
+}
+.zalo-consult-form {
+  display: grid;
+  gap: 20px;
+  max-width: 500px;
+  margin: 40px auto 0;
+}
+.zalo-consult-form input,
+.zalo-consult-form textarea {
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+}
+.zalo-consult-form textarea {
+  resize: vertical;
+}
+.zalo-consult-form .btn-primary {
+  padding: 18px;
+  font-size: 18px;
 }
 
 .topbar {

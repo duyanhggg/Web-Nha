@@ -22,7 +22,7 @@
     <meta property="og:image" content="https://noithatanhchi.vn/og-image.svg" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="e:\Code\Web-Nha\assets\css\styles.css" />
   </head>
   <body>
     <header class="hero">
@@ -39,13 +39,13 @@
       <nav class="nav container">
         <a href="index.html" class="brand">Nội Thất Anh Chi</a>
         <div class="nav-links">
-          <a href="story.html">Câu chuyện</a>
-          <a href="services.html">Dịch vụ</a>
-          <a href="projects.html">Công trình</a>
-          <a href="process.html">Hành trình</a>
-          <a href="testimonials.html">Cảm nhận</a>
-          <a href="news.html">Tin tức</a>
-          <a href="contact.html">Liên hệ</a>
+          <a href="../story.html">Câu chuyện</a>
+          <a href="../services.html">Dịch vụ</a>
+          <a href="../projects.html">Công trình</a>
+          <a href="../process.html">Hành trình</a>
+          <a href="../testimonials.html">Cảm nhận</a>
+          <a href="../news.html">Tin tức</a>
+          <a href="../contact.html">Liên hệ</a>
         </div>
       </nav>
 
@@ -58,8 +58,8 @@
             công năng và trải nghiệm sống bền vững cho từng gia đình.
           </p>
           <div class="hero-actions">
-            <a href="story.html" class="btn btn-primary">Xem câu chuyện</a>
-            <a href="projects.html" class="btn btn-ghost">Xem công trình</a>
+            <a href="../story.html" class="btn btn-primary">Xem câu chuyện</a>
+            <a href="../projects.html" class="btn btn-ghost">Xem công trình</a>
           </div>
         </div>
 
@@ -90,37 +90,57 @@
         </article>
 
         <div class="home-links">
-          <a class="home-link-card" href="story.html">
+          <a class="home-link-card" href="../story.html">
             <h3>Câu chuyện</h3>
             <p>Triết lý thiết kế và giá trị cốt lõi tạo nên dấu ấn Anh Chi.</p>
           </a>
-          <a class="home-link-card" href="services.html">
+          <a class="home-link-card" href="../services.html">
             <h3>Dịch vụ</h3>
             <p>Thiết kế, thi công, cải tạo và tư vấn nội thất theo nhu cầu thực tế.</p>
           </a>
-          <a class="home-link-card" href="projects.html">
+          <a class="home-link-card" href="../projects.html">
             <h3>Công trình</h3>
             <p>Các dự án tiêu biểu thể hiện rõ ngôn ngữ thiết kế của chúng tôi.</p>
           </a>
-          <a class="home-link-card" href="process.html">
+          <a class="home-link-card" href="../process.html">
             <h3>Hành trình</h3>
             <p>Quy trình 4 bước rõ ràng từ tư vấn đến bàn giao hoàn chỉnh.</p>
           </a>
-          <a class="home-link-card" href="testimonials.html">
+          <a class="home-link-card" href="../testimonials.html">
             <h3>Cảm nhận</h3>
             <p>Phản hồi của khách hàng về trải nghiệm làm việc và chất lượng.</p>
           </a>
-          <a class="home-link-card" href="news.html">
+          <a class="home-link-card" href="../news.html">
             <h3>Tin tức</h3>
             <p>Xu hướng nội thất, kinh nghiệm vật liệu và mẹo tối ưu không gian.</p>
           </a>
-          <a class="home-link-card" href="contact.html">
+          <a class="home-link-card" href="../contact.html">
             <h3>Liên hệ</h3>
             <p>Gửi yêu cầu để nhận tư vấn nhanh cho dự án của bạn.</p>
           </a>
         </div>
       </section>
+
+      <!-- Form Tư Vấn Nhanh - Tự động mở Zalo -->
+      <section class="container cta-section">
+        <div>
+          <p class="eyebrow">Tư vấn miễn phí</p>
+          <h2>Để lại thông tin để được tư vấn sớm nhất</h2>
+          <p style="margin: 20px 0 40px;">Chúng tôi sẽ liên hệ lại trong vòng 24h để hỗ trợ bạn.</p>
+          
+          <form id="zalo-consult-form" class="zalo-consult-form">
+            <input type="text" name="ho_ten" placeholder="Họ và tên" required />
+            <input type="tel" name="so_dien_thoai" placeholder="Số điện thoại" required />
+            <textarea name="nhu_cau" rows="4" placeholder="Mô tả nhu cầu của bạn (diện tích, loại hình căn hộ...)"></textarea>
+            <button type="submit" class="btn btn-primary">Gửi yêu cầu tư vấn</button>
+          </form>
+          <p id="form-success" class="form-success">✅ Đã gửi thành công! Đang mở chat Zalo...</p>
+        </div>
+      </section>
     </main>
+
+    <!-- Import middleware xử lý form Zalo -->
+    <script src="assets/js/zalo-form.js"></script>
 
     <footer class="footer">
       <div class="container footer-grid">
@@ -132,12 +152,12 @@
         </div>
         <div>
           <h3>Liên kết nhanh</h3>
-          <a href="story.html">Câu chuyện</a>
-          <a href="services.html">Dịch vụ</a>
-          <a href="projects.html">Công trình</a>
-          <a href="process.html">Hành trình</a>
-          <a href="news.html">Tin tức</a>
-          <a href="contact.html">Liên hệ</a>
+          <a href="../story.html">Câu chuyện</a>
+          <a href="../services.html">Dịch vụ</a>
+          <a href="../projects.html">Công trình</a>
+          <a href="../process.html">Hành trình</a>
+          <a href="../news.html">Tin tức</a>
+          <a href="../contact.html">Liên hệ</a>
         </div>
         <div>
           <h3>Thông tin</h3>
