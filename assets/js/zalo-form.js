@@ -1,61 +1,71 @@
-// Zalo + Twilio API Consult Form Handler - Middleware xử lý form tư vấn chung
-// LƯU Ý QUAN TRỌNG: Twilio YÊU CẦU backend để ẩn Account SID & Auth Token, không được để lộ thông tin này ở frontend
+/**
+ * Xử lý gửi Form tư vấn trực tiếp qua Zalo (Option 1)
+ * Zalo Hotline / Zalo Me: 0335818138 (AnhChiNoiThat)
+ */
 document.addEventListener('DOMContentLoaded', function() {
-  // Khởi tạo form cho trang chủ (id: zalo-consult-form)
-  const mainForm = document.getElementById('zalo-consult-form');
-  if (mainForm) {
-    initForm(mainForm, 'form-success');
-  }
+  const ZALO_PHONE = '0335818138';
+  const forms = document.querySelectorAll('.luxury-form');
 
-  // Khởi tạo form cho trang liên hệ (id: zalo-consult-form-contact)
-  const contactForm = document.getElementById('zalo-consult-form-contact');
-  if (contactForm) {
-    initForm(contactForm, 'form-success-contact');
-  }
+  if (!forms.length) return;
 
-  // Hàm chung xử lý form (hỗ trợ cả Twilio API gửi SMS + mở Zalo)
-  function initForm(formElement, successElementId) {
-    formElement.addEventListener('submit', async function(e) {
+  const projectTypeLabels = {
+    'biet-thu': 'Biệt thự / Villa',
+    'penthouse': 'Penthouse / Căn hộ cao cấp',
+    'nha-pho': 'Nhà phố / Lô góc',
+    'commercial': 'Showroom / Văn phòng'
+  };
+
+  forms.forEach(form => {
+    form.addEventListener('submit', function(e) {
       e.preventDefault();
-      
-      const formData = new FormData(formElement);
-      const data = Object.fromEntries(formData);
-      
-      try {
-        // === Bước 1: Gửi dữ liệu đến backend Node.js (backend sẽ gọi Twilio API) ===
-        const response = await fetch('/api/send-consult-sms', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ho_ten: data.ho_ten,
-            so_dien_thoai_khach: data.so_dien_thoai,
-            nhu_cau: data.nhu_cau
-          })
-        });
 
-        if (response.ok) {
-          // === Bước 2: Hiển thị thông báo thành công cho khách hàng ===
-          const successElement = document.getElementById(successElementId);
-          if (successElement) {
-            successElement.textContent = "✅ Đã gửi thông tin thành công! Chúng tôi sẽ liên hệ lại sớm.";
-            successElement.style.display = 'block';
-            formElement.reset();
-            setTimeout(() => { successElement.style.display = 'none'; }, 5000);
-          }
+      const nameInput = form.querySelector('[name="name"]');
+      const phoneInput = form.querySelector('[name="phone"]');
+      const typeSelect = form.querySelector('[name="project_type"]');
+      const msgInput = form.querySelector('[name="message"]');
 
-          // === Bước 3: Vẫn mở Zalo để khách có thể chủ động nhắn tin ===
-          const ZALO_PHONE = '0335818138';
-          const zaloMessage = encodeURIComponent(
-            `👋 Xin chào Nội Thất Anh Chi! Tôi là ${data.ho_ten || 'khách hàng'} - SĐT: ${data.so_dien_thoai || ''}.\nNhu cầu: ${data.nhu_cau || 'Tôi muốn tư vấn về nội thất.'}`
-          );
-          window.open(`https://zalo.me/${ZALO_PHONE}?text=${zaloMessage}`, '_blank');
-        } else {
-          throw new Error('Gửi SMS thất bại');
-        }
-      } catch (error) {
-        console.error('Lỗi:', error);
-        alert('Có lỗi xảy ra! Vui lòng liên hệ trực tiếp qua Zalo: 0335818138');
+      const name = nameInput ? nameInput.value.trim() : '';
+      const phone = phoneInput ? phoneInput.value.trim() : '';
+      const rawType = typeSelect ? typeSelect.value : '';
+      const projectType = projectTypeLabels[rawType] || rawType || 'Tư vấn nội thất';
+      const message = msgInput ? msgInput.value.trim() : '';
+
+      if (!name || !phone) {
+        alert('Vui lòng điền đầy đủ Họ tên và Số điện thoại!');
+        return;
       }
+
+      // Tạo nội dung tin nhắn tư vấn gửi Zalo
+      let zaloText = `Xin chào AnhChiNoiThat!\nTôi muốn nhận tư vấn không gian nội thất:\n`;
+      zaloText += `- Họ và tên: ${name}\n`;
+      zaloText += `- Số điện thoại: ${phone}\n`;
+      if (projectType) zaloText += `- Loại công trình: ${projectType}\n`;
+      if (message) zaloText += `- Lời nhắn: ${message}\n`;
+
+      // 1. Mở Zalo Chat trong tab mới NGAY LẬP TỨC (đồng bộ) để không bị trình duyệt chặn popup
+      window.open(`https://zalo.me/${ZALO_PHONE}`, '_blank');
+
+      // 2. Copy tự động nội dung thông tin tư vấn vào clipboard của khách
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(zaloText).catch(err => {
+          console.warn('Không thể copy tự động:', err);
+        });
+      }
+
+      // 3. Đổi trạng thái nút bấm gửi
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.innerHTML = '⏳ Đang chuyển tiếp sang trang cảm ơn...';
+        submitBtn.disabled = true;
+      }
+
+      // 4. Chuyển hướng tab hiện tại đến trang thanks.html
+      const isSubFolder = window.location.pathname.includes('/pages/');
+      const thanksPath = isSubFolder ? 'thanks.html' : 'pages/thanks.html';
+
+      setTimeout(() => {
+        window.location.href = thanksPath;
+      }, 500);
     });
-  }
-});
+  });
+});

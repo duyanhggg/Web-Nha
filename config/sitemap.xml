@@ -6,43 +6,38 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://noithatanhchi.vn/story.html</loc>
+    <loc>https://noithatanhchi.vn/pages/story.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://noithatanhchi.vn/services.html</loc>
+    <loc>https://noithatanhchi.vn/pages/services.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://noithatanhchi.vn/projects.html</loc>
+    <loc>https://noithatanhchi.vn/pages/projects.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://noithatanhchi.vn/process.html</loc>
+    <loc>https://noithatanhchi.vn/pages/process.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://noithatanhchi.vn/testimonials.html</loc>
+    <loc>https://noithatanhchi.vn/pages/testimonials.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://noithatanhchi.vn/news.html</loc>
+    <loc>https://noithatanhchi.vn/pages/news.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://noithatanhchi.vn/contact.html</loc>
+    <loc>https://noithatanhchi.vn/pages/contact.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://noithatanhchi.vn/thanks.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
   </url>
 </urlset>

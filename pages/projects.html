@@ -3,41 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nội Thất Anh Chi | Công trình</title>
+    <title>AnhChiNoiThat | Thư Viện Công Trình</title>
     <meta
       name="description"
-      content="Danh sách công trình tiêu biểu của Nội Thất Anh Chi theo phong cách sang trọng hiện đại."
+      content="Tuyển tập các công trình nội thất cao cấp của AnhChiNoiThat: biệt thự, penthouse, căn hộ sang trọng."
     />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://noithatanhchi.vn/pages/projects.html" />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="vi_VN" />
-    <meta property="og:site_name" content="Nội Thất Anh Chi" />
-    <meta property="og:title" content="Nội Thất Anh Chi | Công trình" />
-    <meta
-      property="og:description"
-      content="Các công trình nội thất tiêu biểu, thể hiện rõ phong cách và năng lực triển khai của Nội Thất Anh Chi."
-    />
-    <meta property="og:url" content="https://noithatanhchi.vn/projects.html" />
-    <meta property="og:image" content="https://noithatanhchi.vn/assets/images/og-image.svg" />
-    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
     <link rel="stylesheet" href="../assets/css/styles.css" />
   </head>
   <body>
-    <header class="inner-hero">
-      <div class="topbar">
-        <div class="container topbar-inner">
-          <p>Nội Thất Anh Chi</p>
-          <div class="topbar-links">
-            <a href="tel:0335818138">0335818138</a>
-            <a href="mailto:noithatanhchi@gmail.com">noithatanhchi@gmail.com</a>
-          </div>
+    <!-- Top Contact Bar -->
+    <div class="topbar">
+      <div class="container topbar-inner">
+        <div class="topbar-badge">
+          <span class="topbar-dot"></span>
+          <span>AnhChiNoiThat — THƯ VIỆN CÔNG TRÌNH TIÊU BIỂU</span>
+        </div>
+        <div class="topbar-links">
+          <a href="tel:0335818138">HOTLINE: 033 581 8138</a>
+          <a href="mailto:anhchinoithat@gmail.com">EMAIL: ANHCHINOITHAT@GMAIL.COM</a>
         </div>
       </div>
+    </div>
 
+    <!-- Header Navigation -->
+    <div class="header-nav-wrapper inner-page-nav">
       <nav class="nav container">
-        <a href="../index.html" class="brand">Nội Thất Anh Chi</a>
+        <a href="../index.html" class="brand">AnhChiNoiThat</a>
+        
         <div class="nav-links">
           <a href="story.html">Câu chuyện</a>
           <a href="services.html">Dịch vụ</a>
@@ -47,71 +42,169 @@
           <a href="news.html">Tin tức</a>
           <a href="contact.html">Liên hệ</a>
         </div>
-      </nav>
 
-      <section class="inner-shell container">
-        <p class="eyebrow">Công trình</p>
-        <h1>Những dự án mang bản sắc thiết kế riêng.</h1>
+        <button class="mobile-menu-toggle" aria-label="Mở Menu Navigation" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Mobile Drawer Nav -->
+    <div class="mobile-nav-overlay"></div>
+    <aside class="mobile-nav-drawer">
+      <div class="mobile-nav-header">
+        <span class="brand">AnhChiNoiThat</span>
+        <button class="mobile-nav-close" aria-label="Đóng Menu">&times;</button>
+      </div>
+      <div class="mobile-nav-links">
+        <a href="../index.html">Trang chủ</a>
+        <a href="story.html">Câu chuyện</a>
+        <a href="services.html">Dịch vụ</a>
+        <a href="projects.html">Công trình</a>
+        <a href="process.html">Hành trình</a>
+        <a href="testimonials.html">Cảm nhận</a>
+        <a href="news.html">Tin tức</a>
+        <a href="contact.html">Liên hệ</a>
+      </div>
+    </aside>
+
+    <!-- Inner Hero -->
+    <header class="inner-hero">
+      <div class="container inner-shell">
+        <p class="eyebrow">PORTFOLIO CÔNG TRÌNH</p>
+        <h1>Tuyển Tập Những Dự Án Mang Bản SẮC ĐỘC BẢN.</h1>
         <p>
-          Từ căn hộ cao cấp đến văn phòng doanh nghiệp, mỗi công trình đều được cá nhân hoá
-          để phù hợp công năng và phong cách sống của khách hàng.
+          Từ biệt thự sân vườn đến penthouse hiện đại, mỗi công trình là một tác phẩm được may đo tỉ mỉ nhằm tôn vinh gu thẩm mỹ riêng của chủ nhân.
         </p>
-      </section>
+      </div>
     </header>
 
     <main class="page-body">
-      <section class="container">
-        <div class="project-grid">
-          <article class="project-card project-card-large">
-            <p class="project-label">01</p>
-            <h3>Biệt thự ánh sáng tự nhiên</h3>
-            <p>Không gian mở với ngôn ngữ vật liệu ấm, kết nối giữa kiến trúc và thiên nhiên.</p>
+      <section class="container section">
+        <!-- Category Filter -->
+        <div class="portfolio-filter-bar">
+          <button class="portfolio-filter-btn active" data-filter="all">Tất cả dự án</button>
+          <button class="portfolio-filter-btn" data-filter="villa">Biệt thự & Villa</button>
+          <button class="portfolio-filter-btn" data-filter="penthouse">Penthouse & Căn hộ</button>
+          <button class="portfolio-filter-btn" data-filter="commercial">Commercial & Showroom</button>
+        </div>
+
+        <!-- Asymmetrical Editorial Portfolio Grid -->
+        <div class="asymmetric-grid">
+          <article class="project-card col-8" data-category="penthouse">
+            <div class="project-card-image">
+              <img src="../assets/images/0b22fe0d6c8fedd1b49e10.jpg" alt="Căn hộ Mipec Long Biên" />
+            </div>
+            <div class="project-card-body">
+              <div class="project-meta">
+                <span>PENTHOUSE • HÀ NỘI</span>
+                <span>2026</span>
+              </div>
+              <h3>Giường Tầng Đa Năng & Suite Master — CC Mipec Long Biên</h3>
+              <p>Giải pháp tối ưu diện tích cho không gian căn hộ gia đình nhỏ với thiết kế gỗ tự nhiên ấm áp.</p>
+            </div>
           </article>
-          <article class="project-card">
-            <p class="project-label">02</p>
-            <h3>Showroom thương hiệu</h3>
-            <p>Tối ưu hành trình trải nghiệm khách hàng và làm nổi bật sản phẩm chủ đạo.</p>
+
+          <article class="project-card col-4" data-category="villa">
+            <div class="project-card-image">
+              <img src="../assets/images/31f9d9d64b54ca0a93459.jpg" alt="Biệt thự Ánh Sáng Tự Nhiên" />
+            </div>
+            <div class="project-card-body">
+              <div class="project-meta">
+                <span>BIỆT THỰ • HÀ NỘI</span>
+                <span>2025</span>
+              </div>
+              <h3>Biệt Thự Ánh Sáng Tự Nhiên</h3>
+              <p>Ngôn ngữ vật liệu gỗ và đá tự nhiên kết nối hài hòa cùng ánh sáng mặt trời.</p>
+            </div>
           </article>
-          <article class="project-card">
-            <p class="project-label">03</p>
-            <h3>Văn phòng sáng tạo</h3>
-            <p>Thiết kế linh hoạt cho môi trường làm việc tốc độ cao và cộng tác hiệu quả.</p>
+
+          <article class="project-card col-4" data-category="commercial">
+            <div class="project-card-image">
+              <img src="../assets/images/b18a22a2b020317e68316.jpg" alt="Showroom Nghệ Thuật" />
+            </div>
+            <div class="project-card-body">
+              <div class="project-meta">
+                <span>SHOWROOM • HÀ NỘI</span>
+                <span>2025</span>
+              </div>
+              <h3>Showroom Thương Hiệu Bespoke</h3>
+              <p>Bố cục không gian mở làm nổi bật các bộ sưu tập nội thất độc bản.</p>
+            </div>
           </article>
-          <article class="project-card">
-            <p class="project-label">04</p>
-            <h3>Nhà phố tối giản</h3>
-            <p>Giữ sự tinh gọn, tăng khoảng thở, và đảm bảo đầy đủ tiện nghi sử dụng.</p>
+
+          <article class="project-card col-8" data-category="penthouse">
+            <div class="project-card-image">
+              <img src="../assets/images/ec666c49fecb7f9526da7.jpg" alt="Căn Hộ Penthouse Tối Giản" />
+            </div>
+            <div class="project-card-body">
+              <div class="project-meta">
+                <span>CĂN HỘ CAO CẤP • TIỀN GIANG</span>
+                <span>2026</span>
+              </div>
+              <h3>Penthouse Tối Giản Vĩnh Cửu</h3>
+              <p>Đường nét tinh gọn, chú trọng tỉ lệ vàng và sự an yên trong nhịp sống đô thị.</p>
+            </div>
           </article>
         </div>
       </section>
     </main>
 
+    <!-- Floating Quick Actions (Zalo & Hotline Call) -->
+    <div class="floating-quick-actions">
+      <a href="tel:0335818138" class="phone-float-btn" title="Gọi Hotline: 033 581 8138" aria-label="Gọi ngay Hotline">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+      </a>
+      <a href="https://zalo.me/0335818138" target="_blank" rel="noopener noreferrer" class="zalo-float-btn" title="Tư vấn nhanh qua Zalo">
+        <svg class="zalo-icon" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 5.97 2 10.87c0 2.87 1.54 5.41 3.94 7.07l-.97 3.58 3.73-1.63c1.02.29 2.14.45 3.3.45 5.52 0 10-3.97 10-8.87S17.52 2 12 2zm1 13h-2v-2h2v2zm0-4h-2V7h2v4z"/>
+        </svg>
+        <span>Tư Vấn Zalo</span>
+      </a>
+    </div>
+
+    <!-- Footer -->
     <footer class="footer">
       <div class="container footer-grid">
         <div>
-          <a href="../index.html" class="footer-brand">Nội Thất Anh Chi</a>
-          <p>Thiết kế nội thất theo câu chuyện riêng, cân bằng thẩm mỹ và công năng.</p>
+          <a href="../index.html" class="footer-brand">AnhChiNoiThat</a>
+          <p class="footer-desc">Thiết kế & thi công nội thất sang trọng mang phong cách kiến trúc Studio Ashby Châu Âu.</p>
         </div>
-        <div>
-          <h3>Liên kết nhanh</h3>
-          <a href=\"story.html\">Câu chuyện</a>
-          <a href=\"services.html\">Dịch vụ</a>
-          <a href=\"projects.html\">Công trình</a>
-          <a href=\"process.html\">Hành trình</a>
-          <a href=\"news.html\">Tin tức</a>  
-          <a href=\"contact.html\">Liên hệ</a>
+        <div class="footer-column">
+          <h3>Liên Kết</h3>
+          <div class="footer-links">
+            <a href="story.html">Câu chuyện</a>
+            <a href="services.html">Dịch vụ</a>
+            <a href="projects.html">Công trình</a>
+            <a href="process.html">Hành trình</a>
+          </div>
         </div>
-        <div>
-          <h3>Thông tin</h3>
-          <p>Hotline: 0335818138</p>
-          <p>Email: noithatanhchi@gmail.com</p>
-          <p>TP. Hà Nội, Việt Nam</p>
+        <div class="footer-column">
+          <h3>Thông Tin</h3>
+          <div class="footer-links">
+            <a href="testimonials.html">Cảm nhận</a>
+            <a href="news.html">Tin tức</a>
+            <a href="contact.html">Liên hệ</a>
+          </div>
+        </div>
+        <div class="footer-column">
+          <h3>Liên Hệ</h3>
+          <div class="footer-links">
+            <p style="margin:0;">Hotline: 033 581 8138</p>
+            <p style="margin:0;">Email: anhchinoithat@gmail.com</p>
+            <p style="margin:0;">Địa chỉ: Số nhà 32TT6.2 Khu Đô Thị Nam 32 Thị Trấn Trạm Trôi Xã Hoài Đức Thành Phố Hà Nội</p>
+          </div>
         </div>
       </div>
       <div class="container footer-bottom">
-        <p>Copyright © 2026 Nội Thất Anh Chi. All Rights Reserved.</p>
-        <a href="../index.html">Về trang chủ</a>
+        <p>Copyright © 2026 Nội Thất AnhChiNoiThat. All Rights Reserved.</p>
       </div>
     </footer>
+
+    <script src="../assets/js/main.js"></script>
   </body>
 </html>
