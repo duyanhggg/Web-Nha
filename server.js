@@ -22,7 +22,12 @@ app.get('/sitemap.xml', (req, res) => {
   res.sendFile(path.join(__dirname, 'config', 'sitemap.xml'));
 });
 
-// Khởi động server
-app.listen(PORT, () => {
-  console.log(`Server chạy tại http://localhost:${PORT}`);
-});
+// Khởi động server (khi chạy độc lập)
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Server chạy tại http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
+
