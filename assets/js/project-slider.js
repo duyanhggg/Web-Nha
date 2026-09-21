@@ -1,6 +1,7 @@
 /**
- * Studio Ashby Inspired Project Slider
- * Smooth transitions, autoplay, dots indicators, swipe & hover pause
+ * Studio Ashby & Architectural Digest Inspired Project Slider
+ * Cinematic cross-fade transitions, dynamic editorial metadata,
+ * touch swipe, counters, dots and autoplay with pause on hover.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -12,7 +13,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextButton = slider.querySelector('.next-btn');
     const dotsContainer = slider.querySelector('.slider-dots');
 
+    // Dynamic editorial content nodes
+    const categoryNode = slider.querySelector('.slider-category');
+    const titleNode = slider.querySelector('.slider-title');
+    const descNode = slider.querySelector('.slider-description');
+    const currentNumNode = slider.querySelector('.current-slide-num');
+    const totalNumNode = slider.querySelector('.total-slide-num');
+
     if (!slides.length) return;
+
+    if (totalNumNode) {
+      totalNumNode.textContent = String(slides.length).padStart(2, '0');
+    }
 
     let currentSlide = 0;
     let timer = null;
@@ -25,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
       slides.forEach((_, idx) => {
         const dot = document.createElement('button');
         dot.className = `slider-dot ${idx === 0 ? 'active' : ''}`;
-        dot.setAttribute('aria-label', `Chuyển tới ảnh ${idx + 1}`);
+        dot.setAttribute('aria-label', `Chuyển tới công trình ${idx + 1}`);
         dot.addEventListener('click', (e) => {
           e.stopPropagation();
           showSlide(idx);
@@ -37,6 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showSlide(index) {
       currentSlide = (index + slides.length) % slides.length;
+      const targetSlide = slides[currentSlide];
+
+      // Update active slide class
       slides.forEach((slide, slideIndex) => {
         if (slideIndex === currentSlide) {
           slide.classList.add('active');
@@ -44,6 +59,42 @@ document.addEventListener('DOMContentLoaded', () => {
           slide.classList.remove('active');
         }
       });
+
+      // Update editorial text content with subtle cross-fade
+      if (targetSlide) {
+        const newCat = targetSlide.getAttribute('data-category');
+        const newTitle = targetSlide.getAttribute('data-title');
+        const newDesc = targetSlide.getAttribute('data-desc');
+
+        if (categoryNode && newCat) {
+          categoryNode.textContent = newCat;
+        }
+
+        if (titleNode && newTitle && titleNode.textContent !== newTitle) {
+          titleNode.style.opacity = '0';
+          titleNode.style.transform = 'translateY(6px)';
+          setTimeout(() => {
+            titleNode.textContent = newTitle;
+            titleNode.style.opacity = '1';
+            titleNode.style.transform = 'translateY(0)';
+          }, 180);
+        }
+
+        if (descNode && newDesc && descNode.textContent !== newDesc) {
+          descNode.style.opacity = '0';
+          descNode.style.transform = 'translateY(6px)';
+          setTimeout(() => {
+            descNode.textContent = newDesc;
+            descNode.style.opacity = '1';
+            descNode.style.transform = 'translateY(0)';
+          }, 220);
+        }
+      }
+
+      // Update slide counter
+      if (currentNumNode) {
+        currentNumNode.textContent = String(currentSlide + 1).padStart(2, '0');
+      }
 
       // Update dots state
       if (dotsContainer) {
@@ -56,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startAutoPlay() {
       stopAutoPlay();
-      timer = window.setInterval(() => showSlide(currentSlide + 1), 5000);
+      timer = window.setInterval(() => showSlide(currentSlide + 1), 6000);
     }
 
     function stopAutoPlay() {
@@ -75,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
       startAutoPlay();
     });
 
-    // Touch Swipe Support
+    // Touch Swipe Support for Mobile
     slider.addEventListener('touchstart', (e) => {
       touchStartX = e.changedTouches[0].screenX;
     }, { passive: true });
@@ -87,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleSwipe() {
       const diff = touchEndX - touchStartX;
-      if (Math.abs(diff) > 50) {
+      if (Math.abs(diff) > 40) {
         if (diff < 0) {
           showSlide(currentSlide + 1);
         } else {
