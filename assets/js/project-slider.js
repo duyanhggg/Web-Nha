@@ -1,7 +1,7 @@
 /**
- * Studio Ashby & Architectural Digest Inspired Project Slider
- * Cinematic cross-fade transitions, dynamic editorial metadata,
- * touch swipe, counters, dots and autoplay with pause on hover.
+ * Studio Ashby & Architectural Digest Inspired Showcase Slider
+ * Tự động chuyển đổi mượt mà giữa các bức ảnh dự án,
+ * cập nhật tiêu đề / vị trí và hỗ trợ vuốt chạm, nút bấm, dots.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -13,31 +13,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextButton = slider.querySelector('.next-btn');
     const dotsContainer = slider.querySelector('.slider-dots');
 
-    // Dynamic editorial content nodes
-    const categoryNode = slider.querySelector('.slider-category');
-    const titleNode = slider.querySelector('.slider-title');
-    const descNode = slider.querySelector('.slider-description');
-    const currentNumNode = slider.querySelector('.current-slide-num');
-    const totalNumNode = slider.querySelector('.total-slide-num');
+    const titleNode = slider.querySelector('.showcase-title, .slider-title');
+    const locationNode = slider.querySelector('.showcase-location, .slider-category');
 
     if (!slides.length) return;
-
-    if (totalNumNode) {
-      totalNumNode.textContent = String(slides.length).padStart(2, '0');
-    }
 
     let currentSlide = 0;
     let timer = null;
     let touchStartX = 0;
     let touchEndX = 0;
 
-    // Create dots if container exists
+    // Tạo các chấm chỉ số (dots)
     if (dotsContainer) {
       dotsContainer.innerHTML = '';
       slides.forEach((_, idx) => {
         const dot = document.createElement('button');
         dot.className = `slider-dot ${idx === 0 ? 'active' : ''}`;
-        dot.setAttribute('aria-label', `Chuyển tới công trình ${idx + 1}`);
+        dot.setAttribute('aria-label', `Chuyển tới ảnh ${idx + 1}`);
         dot.addEventListener('click', (e) => {
           e.stopPropagation();
           showSlide(idx);
@@ -51,52 +43,34 @@ document.addEventListener('DOMContentLoaded', () => {
       currentSlide = (index + slides.length) % slides.length;
       const targetSlide = slides[currentSlide];
 
-      // Update active slide class
+      // Đổi class active cho slide ảnh
       slides.forEach((slide, slideIndex) => {
-        if (slideIndex === currentSlide) {
-          slide.classList.add('active');
-        } else {
-          slide.classList.remove('active');
-        }
+        slide.classList.toggle('active', slideIndex === currentSlide);
       });
 
-      // Update editorial text content with subtle cross-fade
+      // Cập nhật text chú thích mượt mà
       if (targetSlide) {
-        const newCat = targetSlide.getAttribute('data-category');
         const newTitle = targetSlide.getAttribute('data-title');
-        const newDesc = targetSlide.getAttribute('data-desc');
-
-        if (categoryNode && newCat) {
-          categoryNode.textContent = newCat;
-        }
+        const newLoc = targetSlide.getAttribute('data-location') || targetSlide.getAttribute('data-category');
 
         if (titleNode && newTitle && titleNode.textContent !== newTitle) {
           titleNode.style.opacity = '0';
-          titleNode.style.transform = 'translateY(6px)';
           setTimeout(() => {
             titleNode.textContent = newTitle;
             titleNode.style.opacity = '1';
-            titleNode.style.transform = 'translateY(0)';
-          }, 180);
+          }, 160);
         }
 
-        if (descNode && newDesc && descNode.textContent !== newDesc) {
-          descNode.style.opacity = '0';
-          descNode.style.transform = 'translateY(6px)';
+        if (locationNode && newLoc && locationNode.textContent !== newLoc) {
+          locationNode.style.opacity = '0';
           setTimeout(() => {
-            descNode.textContent = newDesc;
-            descNode.style.opacity = '1';
-            descNode.style.transform = 'translateY(0)';
-          }, 220);
+            locationNode.textContent = newLoc;
+            locationNode.style.opacity = '1';
+          }, 160);
         }
       }
 
-      // Update slide counter
-      if (currentNumNode) {
-        currentNumNode.textContent = String(currentSlide + 1).padStart(2, '0');
-      }
-
-      // Update dots state
+      // Cập nhật trạng thái dots
       if (dotsContainer) {
         const dots = dotsContainer.querySelectorAll('.slider-dot');
         dots.forEach((dot, dIdx) => {
@@ -107,7 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startAutoPlay() {
       stopAutoPlay();
-      timer = window.setInterval(() => showSlide(currentSlide + 1), 6000);
+      // Tự động chuyển sau mỗi 4.5 giây
+      timer = window.setInterval(() => showSlide(currentSlide + 1), 4500);
     }
 
     function stopAutoPlay() {
@@ -126,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
       startAutoPlay();
     });
 
-    // Touch Swipe Support for Mobile
+    // Hỗ trợ vuốt chạm trên di động
     slider.addEventListener('touchstart', (e) => {
       touchStartX = e.changedTouches[0].screenX;
     }, { passive: true });
@@ -148,9 +123,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    // Tạm dừng khi rê chuột và tiếp tục khi rời chuột
     slider.addEventListener('mouseenter', stopAutoPlay);
     slider.addEventListener('mouseleave', startAutoPlay);
 
+    // Bắt đầu hiển thị slide đầu tiên và kích hoạt autoplay
     showSlide(0);
     startAutoPlay();
   });
