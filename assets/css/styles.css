@@ -888,8 +888,9 @@ img {
   overflow: hidden;
 }
 
-.project-card.col-8 .project-card-image {
-  height: 420px;
+.project-card.col-8 .project-card-image,
+.project-card.col-12 .project-card-image {
+  height: 440px;
 }
 
 .project-card-image img {
@@ -1535,7 +1536,8 @@ img {
   .asymmetric-grid { grid-template-columns: repeat(6, 1fr); }
   .project-card.col-6,
   .project-card.col-4,
-  .project-card.col-8 { grid-column: span 6; }
+  .project-card.col-8,
+  .project-card.col-12 { grid-column: span 6; }
   .services-grid,
   .process-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: repeat(2, 1fr); }

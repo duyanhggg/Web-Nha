@@ -305,9 +305,23 @@ function initLightboxModal() {
 
       if (parentCard) {
         const titleNode = parentCard.querySelector('h3, .slide-title, h4');
-        const tagNode = parentCard.querySelector('.project-category, .eyebrow, .slide-tag');
-        if (titleNode) titleText = titleNode.innerText.trim();
-        if (tagNode) subText = tagNode.innerText.trim();
+        const tagNode = parentCard.querySelector('.project-category, .eyebrow, .slide-tag, .project-meta');
+        if (parentCard.getAttribute('data-title')) {
+          titleText = parentCard.getAttribute('data-title');
+        } else if (titleNode) {
+          titleText = titleNode.innerText.trim();
+        }
+
+        if (parentCard.getAttribute('data-location')) {
+          subText = parentCard.getAttribute('data-location');
+        } else if (tagNode) {
+          const spans = tagNode.querySelectorAll('span');
+          if (spans.length > 0) {
+            subText = Array.from(spans).map(s => s.innerText.trim()).filter(Boolean).join(' • ');
+          } else {
+            subText = tagNode.innerText.trim();
+          }
+        }
       }
 
       imgEl.src = img.src;
