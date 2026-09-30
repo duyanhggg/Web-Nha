@@ -355,5 +355,17 @@ function initLightboxModal() {
       lightboxModal.classList.add('is-active');
     });
   });
+
+  // Hover video playback on cards
+  document.querySelectorAll('.project-card-video').forEach(card => {
+    const vid = card.querySelector('video');
+    if (!vid) return;
+    card.addEventListener('mouseenter', () => {
+      vid.play().catch(() => {});
+    });
+    card.addEventListener('mouseleave', () => {
+      vid.pause();
+    });
+  });
 }
 
