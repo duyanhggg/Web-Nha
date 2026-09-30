@@ -718,7 +718,8 @@ img {
   z-index: 2;
 }
 
-.single-showcase-slider .slide img {
+.single-showcase-slider .slide img,
+.single-showcase-slider .slide video {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -728,7 +729,8 @@ img {
   filter: brightness(0.95);
 }
 
-.single-showcase-slider .slide.active img {
+.single-showcase-slider .slide.active img,
+.single-showcase-slider .slide.active video {
   transform: scale(1);
 }
 

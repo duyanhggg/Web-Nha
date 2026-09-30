@@ -265,6 +265,7 @@ function initLightboxModal() {
         <button class="lightbox-close-btn" aria-label="Đóng">&times;</button>
         <div class="lightbox-img-wrapper">
           <img src="" alt="AnhChiNoiThat Preview" id="lightbox-img">
+          <video controls playsinline id="lightbox-video" style="display:none; max-width:100%; max-height:80vh; border-radius:8px; outline:none; background:#000;"></video>
         </div>
         <h3 class="lightbox-caption" id="lightbox-caption"></h3>
         <p class="lightbox-subtitle" id="lightbox-subtitle"></p>
@@ -275,11 +276,18 @@ function initLightboxModal() {
 
   const closeBtn = lightboxModal.querySelector('.lightbox-close-btn');
   const imgEl = lightboxModal.querySelector('#lightbox-img');
+  const videoEl = lightboxModal.querySelector('#lightbox-video');
   const captionEl = lightboxModal.querySelector('#lightbox-caption');
   const subtitleEl = lightboxModal.querySelector('#lightbox-subtitle');
 
   const closeLightbox = () => {
     lightboxModal.classList.remove('is-active');
+    if (videoEl) {
+      videoEl.pause();
+      videoEl.currentTime = 0;
+      videoEl.src = '';
+      videoEl.style.display = 'none';
+    }
   };
 
   if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
@@ -293,15 +301,15 @@ function initLightboxModal() {
     }
   });
 
-  // Attach click listener to project card images
-  const clickableImages = document.querySelectorAll('.project-card img, .slide img, .featured-slide-card img');
-  clickableImages.forEach(img => {
-    img.style.cursor = 'zoom-in';
-    img.addEventListener('click', (e) => {
+  // Attach click listener to project card images and videos
+  const clickableElements = document.querySelectorAll('.project-card img, .slide img, .featured-slide-card img, .project-card video, .slide video, .open-video-btn');
+  clickableElements.forEach(el => {
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', (e) => {
       e.preventDefault();
-      const parentCard = img.closest('.project-card, .slide, .featured-slide-card');
-      let titleText = img.alt || 'AnhChiNoiThat';
-      let subText = 'Công Trình Cao Cấp';
+      const parentCard = el.closest('.project-card, .slide, .featured-slide-card') || el;
+      let titleText = el.getAttribute('alt') || 'AnhChiNoiThat';
+      let subText = 'Công Trình Thực Tế';
 
       if (parentCard) {
         const titleNode = parentCard.querySelector('h3, .slide-title, h4');
@@ -324,8 +332,24 @@ function initLightboxModal() {
         }
       }
 
-      imgEl.src = img.src;
-      imgEl.alt = titleText;
+      const videoSrc = el.getAttribute('data-video') || (el.tagName === 'VIDEO' ? (el.currentSrc || el.querySelector('source')?.src || el.src) : null);
+
+      if (videoSrc) {
+        imgEl.style.display = 'none';
+        videoEl.style.display = 'block';
+        videoEl.src = videoSrc;
+        videoEl.play().catch(() => {});
+      } else {
+        if (videoEl) {
+          videoEl.pause();
+          videoEl.style.display = 'none';
+          videoEl.src = '';
+        }
+        imgEl.style.display = 'block';
+        imgEl.src = el.src;
+        imgEl.alt = titleText;
+      }
+
       captionEl.innerText = titleText;
       subtitleEl.innerText = subText;
       lightboxModal.classList.add('is-active');

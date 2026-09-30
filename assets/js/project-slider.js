@@ -43,9 +43,19 @@ document.addEventListener('DOMContentLoaded', () => {
       currentSlide = (index + slides.length) % slides.length;
       const targetSlide = slides[currentSlide];
 
-      // Đổi class active cho slide ảnh
+      // Đổi class active cho slide ảnh / video
       slides.forEach((slide, slideIndex) => {
-        slide.classList.toggle('active', slideIndex === currentSlide);
+        const isActive = slideIndex === currentSlide;
+        slide.classList.toggle('active', isActive);
+        const vid = slide.querySelector('video');
+        if (vid) {
+          if (isActive) {
+            vid.currentTime = 0;
+            vid.play().catch(() => {});
+          } else {
+            vid.pause();
+          }
+        }
       });
 
       // Cập nhật text chú thích mượt mà
