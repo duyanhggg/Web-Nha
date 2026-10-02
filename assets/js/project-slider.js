@@ -4,8 +4,17 @@
  * cập nhật tiêu đề / vị trí và hỗ trợ vuốt chạm, nút bấm, dots.
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+let activeSliderTimers = [];
+
+function clearAllSliderTimers() {
+  activeSliderTimers.forEach(t => clearInterval(t));
+  activeSliderTimers = [];
+}
+
+function initProjectSliders() {
+  clearAllSliderTimers();
   const sliders = document.querySelectorAll('.slider');
+  if (!sliders.length) return;
 
   sliders.forEach((slider) => {
     const slides = Array.from(slider.querySelectorAll('.slide'));
@@ -51,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (vid) {
           if (isActive) {
             vid.currentTime = 0;
-            vid.play().catch(() => {});
+            vid.play().catch(() => { });
           } else {
             vid.pause();
           }
@@ -93,10 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
       stopAutoPlay();
       // Tự động chuyển sau mỗi 4.5 giây
       timer = window.setInterval(() => showSlide(currentSlide + 1), 4500);
+      activeSliderTimers.push(timer);
     }
 
     function stopAutoPlay() {
-      if (timer) clearInterval(timer);
+      if (timer) {
+        clearInterval(timer);
+        activeSliderTimers = activeSliderTimers.filter(t => t !== timer);
+        timer = null;
+      }
     }
 
     previousButton?.addEventListener('click', (e) => {
@@ -141,4 +155,11 @@ document.addEventListener('DOMContentLoaded', () => {
     showSlide(0);
     startAutoPlay();
   });
+}
+
+// Expose on window for SPA router
+window.initProjectSliders = initProjectSliders;
+
+document.addEventListener('DOMContentLoaded', () => {
+  initProjectSliders();
 });

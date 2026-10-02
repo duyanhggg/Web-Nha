@@ -2,6 +2,14 @@
   "version": 2,
   "rewrites": [
     { "source": "/robots.txt", "destination": "/config/robots.txt" },
-    { "source": "/sitemap.xml", "destination": "/config/sitemap.xml" }
+    { "source": "/sitemap.xml", "destination": "/config/sitemap.xml" },
+    { "source": "/story", "destination": "/pages/story.html" },
+    { "source": "/services", "destination": "/pages/services.html" },
+    { "source": "/projects", "destination": "/pages/projects.html" },
+    { "source": "/process", "destination": "/pages/process.html" },
+    { "source": "/testimonials", "destination": "/pages/testimonials.html" },
+    { "source": "/news", "destination": "/pages/news.html" },
+    { "source": "/contact", "destination": "/pages/contact.html" },
+    { "source": "/thanks", "destination": "/pages/thanks.html" }
   ]
 }

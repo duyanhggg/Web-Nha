@@ -22,6 +22,24 @@ app.get('/sitemap.xml', (req, res) => {
   res.sendFile(path.join(__dirname, 'config', 'sitemap.xml'));
 });
 
+// SPA Clean URL Route Handlers
+const pageRoutes = [
+  { path: '/story', file: 'pages/story.html' },
+  { path: '/services', file: 'pages/services.html' },
+  { path: '/projects', file: 'pages/projects.html' },
+  { path: '/process', file: 'pages/process.html' },
+  { path: '/testimonials', file: 'pages/testimonials.html' },
+  { path: '/news', file: 'pages/news.html' },
+  { path: '/contact', file: 'pages/contact.html' },
+  { path: '/thanks', file: 'pages/thanks.html' }
+];
+
+pageRoutes.forEach(({ path: routePath, file }) => {
+  app.get(routePath, (req, res) => {
+    res.sendFile(path.join(__dirname, file));
+  });
+});
+
 // Khởi động server (khi chạy độc lập)
 if (!process.env.VERCEL) {
   app.listen(PORT, () => {

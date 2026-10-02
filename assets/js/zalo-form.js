@@ -1,8 +1,9 @@
 /**
- * Xử lý gửi Form tư vấn trực tiếp qua Zalo (Option 1)
+ * Xử lý gửi Form tư vấn trực tiếp qua Zalo
  * Zalo Hotline / Zalo Me: 0335818138 (AnhChiNoiThat)
  */
-document.addEventListener('DOMContentLoaded', function() {
+
+function initZaloForms() {
   const ZALO_PHONE = '0335818138';
   const forms = document.querySelectorAll('.luxury-form');
 
@@ -16,6 +17,10 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 
   forms.forEach(form => {
+    // Avoid double attaching on SPA re-init
+    if (form.dataset.formBound === 'true') return;
+    form.dataset.formBound = 'true';
+
     form.addEventListener('submit', function(e) {
       e.preventDefault();
 
@@ -59,13 +64,21 @@ document.addEventListener('DOMContentLoaded', function() {
         submitBtn.disabled = true;
       }
 
-      // 4. Chuyển hướng tab hiện tại đến trang thanks.html
-      const isSubFolder = window.location.pathname.includes('/pages/');
-      const thanksPath = isSubFolder ? 'thanks.html' : 'pages/thanks.html';
+      // 4. Chuyển hướng tab hiện tại đến trang thanks.html (hỗ trợ SPA Router)
+      const thanksPath = '/pages/thanks.html';
 
       setTimeout(() => {
-        window.location.href = thanksPath;
+        if (typeof window.spaNavigate === 'function') {
+          window.spaNavigate(thanksPath);
+        } else {
+          window.location.href = thanksPath;
+        }
       }, 500);
     });
   });
-});
+}
+
+// Expose on window for SPA router
+window.initZaloForms = initZaloForms;
+
+document.addEventListener('DOMContentLoaded', initZaloForms);

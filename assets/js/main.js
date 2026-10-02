@@ -34,19 +34,30 @@ function initHeaderScroll() {
 }
 
 // Active Nav Link highlight based on current page
-function initActiveNavLink() {
-  const currentPath = window.location.pathname;
+function initActiveNavLink(customUrl) {
+  const currentPath = customUrl ? new URL(customUrl, window.location.href).pathname : window.location.pathname;
   const navLinks = document.querySelectorAll('.nav-links a, .mobile-nav-links a');
 
   navLinks.forEach(link => {
-    const href = link.getAttribute('href');
-    if (!href) return;
+    const rawHref = link.getAttribute('href');
+    if (!rawHref || rawHref.startsWith('tel:') || rawHref.startsWith('mailto:') || rawHref.startsWith('http') || rawHref.startsWith('#')) return;
 
-    if (currentPath.endsWith(href) || (href === 'index.html' && (currentPath.endsWith('/') || currentPath.endsWith('index.html')))) {
-      link.classList.add('active');
-    } else {
-      link.classList.remove('active');
-    }
+    try {
+      const linkPath = new URL(rawHref, window.location.href).pathname;
+      const isCurrentHome = currentPath === '/' || currentPath.endsWith('/index.html') || currentPath.endsWith('index.html');
+      const isLinkHome = linkPath === '/' || linkPath.endsWith('/index.html') || linkPath.endsWith('index.html');
+
+      if (isCurrentHome && isLinkHome) {
+        link.classList.add('active');
+        link.setAttribute('aria-current', 'page');
+      } else if (!isLinkHome && (currentPath === linkPath || currentPath.endsWith(linkPath) || linkPath.endsWith(currentPath))) {
+        link.classList.add('active');
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.classList.remove('active');
+        link.removeAttribute('aria-current');
+      }
+    } catch (e) {}
   });
 }
 
@@ -140,6 +151,8 @@ function initMobileMenu() {
 
   if (closeBtn) closeBtn.addEventListener('click', closeMenu);
   if (overlay) overlay.addEventListener('click', closeMenu);
+
+  window.closeMobileMenu = closeMenu;
 
   // Close menu when clicking links
   drawer.querySelectorAll('a').forEach(link => {
@@ -304,6 +317,9 @@ function initLightboxModal() {
   // Attach click listener to project card images and videos
   const clickableElements = document.querySelectorAll('.project-card img, .slide img, .featured-slide-card img, .project-card video, .slide video, .open-video-btn');
   clickableElements.forEach(el => {
+    if (el.dataset.lightboxBound === 'true') return;
+    el.dataset.lightboxBound = 'true';
+
     el.style.cursor = 'pointer';
     el.addEventListener('click', (e) => {
       e.preventDefault();
@@ -358,6 +374,9 @@ function initLightboxModal() {
 
   // Hover video playback on cards
   document.querySelectorAll('.project-card-video').forEach(card => {
+    if (card.dataset.videoHoverBound === 'true') return;
+    card.dataset.videoHoverBound = 'true';
+
     const vid = card.querySelector('video');
     if (!vid) return;
     card.addEventListener('mouseenter', () => {
@@ -368,4 +387,13 @@ function initLightboxModal() {
     });
   });
 }
+
+// Expose on window for SPA router re-initialization
+window.initActiveNavLink = initActiveNavLink;
+window.initPortfolioFilter = initPortfolioFilter;
+window.initScrollAnimations = initScrollAnimations;
+window.initSmoothScroll = initSmoothScroll;
+window.initCounterAnimations = initCounterAnimations;
+window.initLightboxModal = initLightboxModal;
+
 

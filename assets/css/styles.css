@@ -304,17 +304,20 @@ img {
 }
 
 .nav-links a:hover::after,
-.nav-links a[aria-current="page"]::after {
+.nav-links a[aria-current="page"]::after,
+.nav-links a.active::after {
   width: 100%;
 }
 
 .hero-nav .nav-links a:hover,
-.hero-nav .nav-links a[aria-current="page"] {
+.hero-nav .nav-links a[aria-current="page"],
+.hero-nav .nav-links a.active {
   color: #FFFFFF;
 }
 
 .inner-page-nav .nav-links a:hover,
-.inner-page-nav .nav-links a[aria-current="page"] {
+.inner-page-nav .nav-links a[aria-current="page"],
+.inner-page-nav .nav-links a.active {
   color: var(--accent-gold);
 }
 
@@ -399,7 +402,9 @@ img {
   transition: color 0.3s ease;
 }
 
-.mobile-nav-links a:hover {
+.mobile-nav-links a:hover,
+.mobile-nav-links a.active,
+.mobile-nav-links a[aria-current="page"] {
   color: var(--accent-gold);
 }
 
@@ -1685,4 +1690,53 @@ img {
   .floating-quick-actions { bottom: 20px; right: 20px; }
   .zalo-float-btn { padding: 0.7rem 1.2rem; }
   .zalo-float-btn span { display: none; }
+}
+
+/* ==========================================================================
+   Single Page Application (SPA) Transition & Progress Bar Styles
+   ========================================================================== */
+
+#spa-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #C5A059 0%, #E6C887 50%, #F5E5BE 100%);
+  box-shadow: 0 0 14px rgba(197, 160, 89, 0.9), 0 0 6px rgba(230, 200, 135, 0.7);
+  z-index: 99999;
+  pointer-events: none;
+  opacity: 0;
+  transition: width 0.25s cubic-bezier(0.1, 0.9, 0.2, 1), opacity 0.2s ease;
+}
+
+#spa-progress-bar.is-loading {
+  opacity: 1;
+}
+
+#spa-progress-bar.is-finishing {
+  width: 100% !important;
+  opacity: 1;
+}
+
+.spa-content {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.24s cubic-bezier(0.25, 1, 0.5, 1), transform 0.24s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: opacity, transform;
+}
+
+.spa-content.is-exiting {
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+}
+
+.spa-content.is-entering {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.topbar-badge span:last-child {
+  transition: opacity 0.15s ease;
 }
