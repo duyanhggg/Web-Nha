@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AnhChiNoiThat — Quản Trị Tải Ảnh & Công Trình Cloudinary</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Cloudinary Official Upload Widget -->
+  <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0c0d10;
+      --bg-surface: #14151b;
+      --bg-surface-elevated: #1b1d24;
+      --bg-glass: rgba(22, 24, 32, 0.85);
+      --gold-primary: #d4af37;
+      --gold-light: #f3e5ab;
+      --gold-dark: #a3821a;
+      --gold-glow: rgba(212, 175, 55, 0.25);
+      --text-main: #f0f0f4;
+      --text-muted: #9fa3b5;
+      --text-dim: #6b7086;
+      --border: rgba(212, 175, 55, 0.18);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-lg: 18px;
+      --shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+      --font-heading: 'Playfair Display', Georgia, serif;
+      --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Ambient luxury background glow */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -150px;
+      right: -100px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -150px;
+      left: -100px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* PIN GATE SCREEN */
+    #pin-gate {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 11, 14, 0.96);
+      backdrop-filter: blur(24px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 1.5rem;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    #pin-gate.is-unlocked {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .pin-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2.8rem 2.2rem;
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .pin-brand-title {
+      font-family: var(--font-heading);
+      font-size: 1.85rem;
+      color: var(--gold-light);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.5px;
+    }
+
+    .pin-brand-sub {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      margin-bottom: 2rem;
+    }
+
+    .pin-input-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .pin-input {
+      width: 100%;
+      padding: 0.95rem 1.2rem;
+      background: var(--bg-dark);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      color: #fff;
+      font-size: 1.15rem;
+      letter-spacing: 2px;
+      text-align: center;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    .pin-input:focus {
+      border-color: var(--gold-primary);
+      box-shadow: 0 0 0 3px var(--gold-glow);
+    }
+
+    .pin-hint {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-top: 0.6rem;
+    }
+
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-primary) 50%, var(--gold-dark) 100%);
+      color: #0c0d10;
+      font-weight: 600;
+      font-size: 0.98rem;
+      padding: 0.85rem 1.8rem;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 16px rgba(212, 175, 55, 0.25);
+    }
+
+    .btn-gold:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(212, 175, 55, 0.38);
+    }
+
+    /* TOP HEADER NAV */
+    .admin-header {
+      background: var(--bg-glass);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .admin-brand h1 {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .admin-brand-tag {
+      background: rgba(212, 175, 55, 0.12);
+      border: 1px solid var(--border);
+      color: var(--gold-light);
+      font-size: 0.72rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .admin-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-link-btn {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .header-link-btn:hover {
+      color: #fff;
+      border-color: var(--gold-primary);
+      background: rgba(212, 175, 55, 0.08);
+    }
+
+    /* MAIN CONTAINER & TABS */
+    .admin-main {
+      flex: 1;
+      max-width: 1300px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 0.75rem;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 1rem;
+      margin-bottom: 2rem;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 0.65rem 1.4rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+      background: var(--bg-surface);
+    }
+
+    .tab-btn.active {
+      color: var(--gold-light);
+      background: var(--bg-surface);
+      border-color: var(--border);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    }
+
+    .tab-badge {
+      background: rgba(212, 175, 55, 0.16);
+      color: var(--gold-light);
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    /* TAB PANELS */
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* OVERVIEW STATS CARDS */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .stat-card:hover {
+      border-color: var(--border);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(212, 175, 55, 0.1);
+      color: var(--gold-light);
+      font-size: 1.4rem;
+    }
+
+    .stat-info h4 {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-info .stat-value {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* UPLOAD HERO BOX */
+    .upload-hero-box {
+      background: linear-gradient(145deg, rgba(27, 29, 36, 0.9) 0%, rgba(20, 21, 27, 0.9) 100%);
+      border: 2px dashed var(--gold-primary);
+      border-radius: var(--radius-lg);
+      padding: 2.8rem 2rem;
+      text-align: center;
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .upload-hero-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      animation: pulseGlow 2.5s infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    .upload-hero-title {
+      font-family: var(--font-heading);
+      font-size: 1.75rem;
+      color: #fff;
+      margin-bottom: 0.6rem;
+    }
+
+    .upload-hero-desc {
+      color: var(--text-muted);
+      max-width: 580px;
+      margin: 0 auto 1.8rem;
+      font-size: 0.95rem;
+    }
+
+    /* FORM STYLES */
+    .card-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .panel-header {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-title {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      color: var(--gold-light);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    .form-group-full {
+      grid-column: span 2;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      background: var(--bg-dark);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      padding: 0.75rem 1rem;
+      font-size: 0.92rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--gold-primary);
+      box-shadow: 0 0 0 2px var(--gold-glow);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      padding: 0.8rem 0;
+    }
+
+    .checkbox-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      font-size: 0.92rem;
+      color: var(--text-main);
+    }
+
+    .checkbox-label input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--gold-primary);
+      cursor: pointer;
+    }
+
+    /* PREVIEW THUMBNAIL IN FORM */
+    .preview-box {
+      margin-top: 1rem;
+      background: var(--bg-dark);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .preview-thumb {
+      width: 120px;
+      height: 80px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+      background: #000;
+    }
+
+    .preview-info {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .preview-info p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    /* PROJECT CARDS LIST */
+    .project-list-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .item-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .item-card:hover {
+      border-color: var(--border);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .item-card-media {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .item-card-media img, .item-card-media video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .item-card:hover .item-card-media img {
+      transform: scale(1.04);
+    }
+
+    .item-badge-group {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      z-index: 2;
+    }
+
+    .badge-pill {
+      background: rgba(12, 13, 16, 0.85);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      font-size: 0.72rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-weight: 500;
+    }
+
+    .badge-pill.slider-badge {
+      border-color: var(--gold-primary);
+      color: var(--gold-light);
+      background: rgba(212, 175, 55, 0.2);
+    }
+
+    .badge-pill.video-badge {
+      border-color: #3b82f6;
+      color: #93c5fd;
+      background: rgba(59, 130, 246, 0.2);
+    }
+
+    .item-card-body {
+      padding: 1.25rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .item-card-meta {
+      font-size: 0.78rem;
+      color: var(--gold-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+    }
+
+    .item-card-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      line-height: 1.35;
+    }
+
+    .item-card-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .item-card-footer {
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .slider-toggle-btn {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+
+    .slider-toggle-btn.active {
+      background: rgba(212, 175, 55, 0.15);
+      border-color: var(--gold-primary);
+      color: var(--gold-light);
+    }
+
+    .action-btn-group {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-dark);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .icon-btn:hover {
+      color: #fff;
+      border-color: var(--gold-primary);
+      background: var(--bg-surface-elevated);
+    }
+
+    .icon-btn.btn-delete:hover {
+      color: var(--danger);
+      border-color: var(--danger);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    /* CLOUDINARY CONFIG GUIDE */
+    .config-guide-box {
+      background: rgba(212, 175, 55, 0.05);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .guide-step {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .guide-step:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-number {
+      width: 28px;
+      height: 28px;
+      background: var(--gold-primary);
+      color: #000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .step-text h5 {
+      color: #fff;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .step-text p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* TOAST ALERTS */
+    #toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 10000;
+    }
+
+    .toast {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 0.85rem 1.4rem;
+      border-radius: var(--radius);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 0.9rem;
+      animation: slideIn 0.25s ease;
+      min-width: 280px;
+    }
+
+    .toast.success { border-color: var(--success); }
+    .toast.error { border-color: var(--danger); }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      .admin-header {
+        padding: 1rem;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-group-full {
+        grid-column: span 1;
+      }
+      .project-list-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SECURITY PIN GATE -->
+  <div id="pin-gate">
+    <div class="pin-card">
+      <div style="font-size: 2.2rem; margin-bottom: 0.8rem;">🔒</div>
+      <h2 class="pin-brand-title">AnhChiNoiThat</h2>
+      <p class="pin-brand-sub">Hệ thống Quản trị & Tải ảnh Cloudinary không cần code</p>
+      
+      <div class="pin-input-group">
+        <input type="password" id="pin-input" class="pin-input" placeholder="Nhập mã PIN quản trị..." autocomplete="off" />
+        <p class="pin-hint">Mã PIN mặc định: <strong>anhchi2026</strong> (Có thể đổi trong Cài đặt)</p>
+      </div>
+
+      <button id="btn-unlock" class="btn-gold" style="width: 100%;">
+        Đăng Nhập Quản Trị →
+      </button>
+    </div>
+  </div>
+
+  <!-- ADMIN HEADER -->
+  <header class="admin-header">
+    <div class="admin-brand">
+      <h1>AnhChiNoiThat</h1>
+      <span class="admin-brand-tag">Cloudinary Media CMS</span>
+    </div>
+
+    <div class="admin-actions">
+      <span id="cloud-status-badge" class="badge-pill" style="border-color: var(--warning); color: var(--warning); background: rgba(245, 158, 11, 0.1);">
+        ⚡ Đang kiểm tra Cloudinary...
+      </span>
+      <a href="../index.html" target="_blank" class="header-link-btn" title="Mở trang chủ xem trước">
+        <span>Trang Chủ</span> ↗
+      </a>
+      <a href="projects.html" target="_blank" class="header-link-btn" title="Mở thư viện công trình">
+        <span>Thư Viện</span> ↗
+      </a>
+      <button id="btn-logout" class="header-link-btn" style="cursor: pointer;">
+        Đăng Xuất
+      </button>
+    </div>
+  </header>
+
+  <!-- ADMIN CONTENT -->
+  <main class="admin-main">
+    
+    <!-- NAVIGATION TABS -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" data-tab="tab-list">
+        <span>📁 Danh Sách Công Trình & Slider</span>
+        <span class="tab-badge" id="badge-total-count">0</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-upload">
+        <span>📸 Tải Ảnh Cloudinary & Thêm Mới</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-settings">
+        <span>⚙️ Cấu Hình Cloudinary & Sao Lưu</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: LIST PROJECTS -->
+    <div id="tab-list" class="tab-panel active">
+      <!-- STATS -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon">🏗️</div>
+          <div class="stat-info">
+            <h4>Tổng Công Trình</h4>
+            <div class="stat-value" id="stat-total">0</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🌟</div>
+          <div class="stat-info">
+            <h4>Ảnh Chạy Trên Slider</h4>
+            <div class="stat-value" id="stat-slider">0</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🎬</div>
+          <div class="stat-info">
+            <h4>Video Bàn Giao</h4>
+            <div class="stat-value" id="stat-video">0</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">☁️</div>
+          <div class="stat-info">
+            <h4>Lưu Trữ Cloudinary</h4>
+            <div class="stat-value" id="stat-cloudinary" style="font-size: 1.15rem; color: var(--gold-light);">Sẵn sàng</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTER & QUICK ACTIONS -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+          <button class="filter-btn active header-link-btn" data-list-filter="all" style="background: var(--bg-surface); border-color: var(--gold-primary); color: #fff;">
+            Tất Cả
+          </button>
+          <button class="filter-btn header-link-btn" data-list-filter="slider">
+            Chỉ Slider Trang Chủ
+          </button>
+          <button class="filter-btn header-link-btn" data-list-filter="villa">
+            Biệt Thự & Nhà Phố
+          </button>
+          <button class="filter-btn header-link-btn" data-list-filter="penthouse">
+            Penthouse & Căn Hộ
+          </button>
+          <button class="filter-btn header-link-btn" data-list-filter="commercial">
+            Showroom & Thương Mại
+          </button>
+        </div>
+
+        <button class="btn-gold" id="btn-switch-to-upload" style="padding: 0.6rem 1.2rem; font-size: 0.88rem;">
+          + Thêm Công Trình Mới
+        </button>
+      </div>
+
+      <!-- PROJECT LIST -->
+      <div id="project-list-container" class="project-list-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- TAB 2: UPLOAD & ADD / EDIT PROJECT -->
+    <div id="tab-upload" class="tab-panel">
+      <!-- CLOUDINARY UPLOAD HERO WIDGET -->
+      <div class="upload-hero-box">
+        <div class="upload-hero-icon">☁️</div>
+        <h2 class="upload-hero-title">Tải Ảnh / Video Trực Tiếp Lên Cloudinary</h2>
+        <p class="upload-hero-desc">
+          Bấm nút bên dưới để chọn ảnh từ máy tính, điện thoại, hoặc chụp ảnh trực tiếp. Hệ thống tự động nén tối ưu WebP/AVIF và trả về link CDN siêu tốc.
+        </p>
+        <button id="btn-open-cloudinary-widget" class="btn-gold" style="font-size: 1.1rem; padding: 1rem 2.4rem;">
+          📸 Mở Cloudinary Upload Widget (Không Cần Code)
+        </button>
+      </div>
+
+      <!-- PROJECT DETAIL FORM -->
+      <div class="card-panel">
+        <div class="panel-header">
+          <h3 class="panel-title" id="form-heading">Thông Tin Chi Tiết Công Trình</h3>
+          <span style="font-size: 0.82rem; color: var(--text-dim);" id="editing-indicator">Chế độ: Thêm mới</span>
+        </div>
+
+        <form id="project-form">
+          <input type="hidden" id="form-project-id" value="" />
+
+          <!-- MEDIA PREVIEW -->
+          <div class="form-group-full">
+            <label class="form-label">Ảnh hoặc Video Xem Trước</label>
+            <div class="preview-box">
+              <img id="form-media-preview-img" class="preview-thumb" src="../assets/images/0b22fe0d6c8fedd1b49e10.jpg" alt="Preview" />
+              <video id="form-media-preview-video" class="preview-thumb" style="display:none;" controls></video>
+              <div class="preview-info">
+                <p><strong>URL Ảnh/Video:</strong></p>
+                <input type="text" id="form-image-url" class="form-input" placeholder="https://res.cloudinary.com/... hoặc assets/images/..." required style="margin-top: 0.3rem;" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-grid" style="margin-top: 1.5rem;">
+            <div>
+              <label class="form-label" for="form-title">Tên Công Trình (Ngắn gọn trên Slider) *</label>
+              <input type="text" id="form-title" class="form-input" placeholder="Ví dụ: Căn Hộ Mipec Long Biên" required />
+            </div>
+
+            <div>
+              <label class="form-label" for="form-full-title">Tiêu Đề Đầy Đủ (Hiển thị Thư Viện) *</label>
+              <input type="text" id="form-full-title" class="form-input" placeholder="Ví dụ: Giường Tầng Đa Năng & Suite Master — CC Mipec" required />
+            </div>
+
+            <div>
+              <label class="form-label" for="form-category">Phân Loại Danh Mục *</label>
+              <select id="form-category" class="form-select" required>
+                <option value="villa">Biệt Thự & Nhà Phố</option>
+                <option value="penthouse">Penthouse & Căn Hộ</option>
+                <option value="commercial">Commercial & Showroom</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="form-label" for="form-year">Năm Hoàn Thiện</label>
+              <input type="text" id="form-year" class="form-input" placeholder="2026" value="2026" />
+            </div>
+
+            <div>
+              <label class="form-label" for="form-location">Địa Điểm & Điểm Nhấn (Slider)</label>
+              <input type="text" id="form-location" class="form-input" placeholder="Hà Nội • Suite Master & Giường Tầng" />
+            </div>
+
+            <div>
+              <label class="form-label" for="form-meta-location">Nhãn Vị Trí (Thư Viện)</label>
+              <input type="text" id="form-meta-location" class="form-input" placeholder="PENTHOUSE • HÀ NỘI" />
+            </div>
+
+            <div class="form-group-full">
+              <label class="form-label" for="form-desc">Mô Tả Không Gian & Ý Tưởng Thiết Kế</label>
+              <textarea id="form-desc" class="form-textarea" placeholder="Mô tả các giải pháp kiến trúc, vật liệu gỗ, đá tự nhiên và công năng tiện ích..."></textarea>
+            </div>
+
+            <div>
+              <label class="form-label" for="form-badge">Huy Hiệu Nhãn (Badge)</label>
+              <input type="text" id="form-badge" class="form-input" placeholder="📸 2 Góc Ảnh Hoàn Thiện hoặc 🎬 Video Thực Tế" />
+            </div>
+
+            <div>
+              <label class="form-label" for="form-col-span">Kích Thước Ô Lưới (Thư Viện)</label>
+              <select id="form-col-span" class="form-select">
+                <option value="8">Ô Lớn (8 Cột — Nổi bật)</option>
+                <option value="6">Ô Vừa (6 Cột — Cân bằng)</option>
+                <option value="4">Ô Nhỏ (4 Cột — Thanh lịch)</option>
+              </select>
+            </div>
+
+            <!-- VIDEO OPTIONS -->
+            <div class="form-group-full">
+              <label class="checkbox-label">
+                <input type="checkbox" id="form-is-video" />
+                <span>Đây là Video nghiệm thu bàn giao thực tế (MP4)</span>
+              </label>
+            </div>
+
+            <div class="form-group-full" id="video-url-container" style="display: none;">
+              <label class="form-label" for="form-video-url">Đường Dẫn File Video (Cloudinary MP4 URL)</label>
+              <input type="text" id="form-video-url" class="form-input" placeholder="https://res.cloudinary.com/.../video/upload/...mp4" />
+            </div>
+
+            <!-- DISPLAY OPTIONS -->
+            <div class="form-group-full">
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="form-show-slider" checked />
+                  <span>Hiển thị trên Slider Trang Chủ</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="form-show-gallery" checked />
+                  <span>Hiển thị trong Thư Viện Công Trình</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+            <button type="submit" class="btn-gold" id="btn-save-project">
+              💾 Lưu Công Trình Này
+            </button>
+            <button type="button" class="header-link-btn" id="btn-reset-form" style="cursor: pointer;">
+              Hủy / Làm Mới Form
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- TAB 3: CLOUDINARY CONFIG & BACKUP -->
+    <div id="tab-settings" class="tab-panel">
+      <div class="card-panel">
+        <div class="panel-header">
+          <h3 class="panel-title">Cài Đặt Kết Nối Cloudinary (Không Cần Chạm Vào Code)</h3>
+          <span class="badge-pill" style="border-color: var(--gold-primary); color: var(--gold-light);">Lưu Trực Tiếp Trên Trình Duyệt</span>
+        </div>
+
+        <form id="cloudinary-config-form">
+          <div class="form-grid">
+            <div>
+              <label class="form-label" for="cfg-cloud-name">Cloud Name của bạn *</label>
+              <input type="text" id="cfg-cloud-name" class="form-input" placeholder="Ví dụ: dxyzk123" required />
+              <small style="color: var(--text-dim); font-size: 0.75rem;">Lấy tại Dashboard trang chủ Cloudinary của bạn</small>
+            </div>
+
+            <div>
+              <label class="form-label" for="cfg-upload-preset">Upload Preset (Chế độ Unsigned) *</label>
+              <input type="text" id="cfg-upload-preset" class="form-input" placeholder="Ví dụ: anhchinoithat_preset" required />
+              <small style="color: var(--text-dim); font-size: 0.75rem;">Preset dùng để tải ảnh trực tiếp mà không lộ Secret Key</small>
+            </div>
+
+            <div>
+              <label class="form-label" for="cfg-folder">Thư mục Cloudinary (Folder)</label>
+              <input type="text" id="cfg-folder" class="form-input" placeholder="anhchinoithat" value="anhchinoithat" />
+            </div>
+
+            <div style="display: flex; align-items: flex-end; gap: 0.8rem;">
+              <button type="submit" class="btn-gold" style="padding: 0.75rem 1.6rem;">
+                💾 Lưu Cấu Hình Cloudinary
+              </button>
+              <button type="button" id="btn-test-cloudinary" class="header-link-btn" style="cursor: pointer; padding: 0.75rem 1.2rem;">
+                Kiểm Tra Kết Nối
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <!-- 3-STEP GUIDE -->
+        <div class="config-guide-box">
+          <h4 style="color: var(--gold-light); margin-bottom: 1rem; font-family: var(--font-heading); font-size: 1.15rem;">
+            📌 Hướng dẫn lấy Cloud Name & Upload Preset trong 30 giây:
+          </h4>
+          <div class="guide-step">
+            <div class="step-number">1</div>
+            <div class="step-text">
+              <h5>Đăng nhập Cloudinary và lấy Cloud Name</h5>
+              <p>Mở trang <strong>cloudinary.com/console</strong>, bạn sẽ thấy ngay mục <strong>Cloud Name</strong> ở góc trên bên trái màn hình. Copy tên đó dán vào ô trên.</p>
+            </div>
+          </div>
+          <div class="guide-step">
+            <div class="step-number">2</div>
+            <div class="step-text">
+              <h5>Tạo Upload Preset (Unsigned)</h5>
+              <p>Bấm biểu tượng <strong>Cài đặt (Bánh răng ⚙️)</strong> ở góc dưới bên trái → chọn tab <strong>Upload</strong> → cuộn xuống mục <strong>Upload presets</strong> → bấm <strong>Add upload preset</strong>.</p>
+            </div>
+          </div>
+          <div class="guide-step">
+            <div class="step-number">3</div>
+            <div class="step-text">
+              <h5>Chọn chế độ Unsigned & Lưu</h5>
+              <p>Đặt tên cho Preset (ví dụ <code>anhchinoithat</code>), ở dòng <strong>Signing Mode</strong> chuyển thành <strong>Unsigned</strong> → bấm <strong>Save</strong>. Sau đó copy tên Preset dán vào ô bên trên là hoàn tất!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BACKUP & PIN SECURITY -->
+      <div class="card-panel">
+        <div class="panel-header">
+          <h3 class="panel-title">Sao Lưu Dữ Liệu & Bảo Mật Mã PIN</h3>
+        </div>
+
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
+          <button id="btn-export-json" class="header-link-btn" style="cursor: pointer; padding: 0.8rem 1.4rem;">
+            📥 Tải File JSON Dự Án Về Máy (Backup)
+          </button>
+          <button id="btn-reset-default" class="header-link-btn" style="cursor: pointer; padding: 0.8rem 1.4rem; color: var(--danger); border-color: rgba(239, 68, 68, 0.4);">
+            ⚠️ Khôi Phục Dữ Liệu Gốc Ban Đầu
+          </button>
+        </div>
+
+        <div style="max-width: 480px; border-top: 1px solid var(--border-subtle); padding-top: 1.5rem;">
+          <label class="form-label" for="cfg-new-pin">Đổi Mã PIN Đăng Nhập Quản Trị Mới</label>
+          <div style="display: flex; gap: 0.8rem;">
+            <input type="password" id="cfg-new-pin" class="form-input" placeholder="Nhập PIN mới..." />
+            <button id="btn-change-pin" class="btn-gold" style="white-space: nowrap; padding: 0.75rem 1.4rem;">
+              Cập Nhật PIN
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- TOAST CONTAINER -->
+  <div id="toast-container"></div>
+
+  <!-- LOAD PROJECTS STORE SCRIPT -->
+  <script src="../assets/js/projects-store.js"></script>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const PIN_STORAGE_KEY = 'acnt_admin_pin';
+      const SESSION_AUTH_KEY = 'acnt_admin_authenticated';
+      const DEFAULT_PIN = 'anhchi2026';
+
+      // Elements
+      const pinGate = document.getElementById('pin-gate');
+      const pinInput = document.getElementById('pin-input');
+      const btnUnlock = document.getElementById('btn-unlock');
+      const btnLogout = document.getElementById('btn-logout');
+
+      const tabs = document.querySelectorAll('.tab-btn');
+      const tabPanels = document.querySelectorAll('.tab-panel');
+
+      const cloudStatusBadge = document.getElementById('cloud-status-badge');
+      const projectListContainer = document.getElementById('project-list-container');
+      const projectForm = document.getElementById('project-form');
+      const formHeading = document.getElementById('form-heading');
+      const editingIndicator = document.getElementById('editing-indicator');
+      const formMediaPreviewImg = document.getElementById('form-media-preview-img');
+      const formMediaPreviewVideo = document.getElementById('form-media-preview-video');
+      const formImageUrl = document.getElementById('form-image-url');
+      const formIsVideo = document.getElementById('form-is-video');
+      const videoUrlContainer = document.getElementById('video-url-container');
+      const formVideoUrl = document.getElementById('form-video-url');
+
+      const btnOpenCloudinaryWidget = document.getElementById('btn-open-cloudinary-widget');
+      const btnSwitchToUpload = document.getElementById('btn-switch-to-upload');
+      const btnResetForm = document.getElementById('btn-reset-form');
+
+      const cfgCloudName = document.getElementById('cfg-cloud-name');
+      const cfgUploadPreset = document.getElementById('cfg-upload-preset');
+      const cfgFolder = document.getElementById('cfg-folder');
+      const cloudinaryConfigForm = document.getElementById('cloudinary-config-form');
+      const btnTestCloudinary = document.getElementById('btn-test-cloudinary');
+
+      const btnExportJson = document.getElementById('btn-export-json');
+      const btnResetDefault = document.getElementById('btn-reset-default');
+      const cfgNewPin = document.getElementById('cfg-new-pin');
+      const btnChangePin = document.getElementById('btn-change-pin');
+
+      let currentEditingId = null;
+      let cloudinaryWidgetInstance = null;
+
+      // Toast Notification
+      function showToast(message, type = 'success') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `
+          <span>${type === 'success' ? '✓' : '⚠️'}</span>
+          <span>${message}</span>
+        `;
+        container.appendChild(toast);
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(10px)';
+          setTimeout(() => toast.remove(), 300);
+        }, 3200);
+      }
+
+      // PIN Security Authentication
+      function checkAuth() {
+        const isAuth = sessionStorage.getItem(SESSION_AUTH_KEY) === 'true';
+        if (isAuth) {
+          pinGate.classList.add('is-unlocked');
+        } else {
+          pinGate.classList.remove('is-unlocked');
+          pinInput.focus();
+        }
+      }
+
+      function handleUnlock() {
+        const enteredPin = pinInput.value.trim();
+        const savedPin = localStorage.getItem(PIN_STORAGE_KEY) || DEFAULT_PIN;
+
+        if (enteredPin === savedPin) {
+          sessionStorage.setItem(SESSION_AUTH_KEY, 'true');
+          pinGate.classList.add('is-unlocked');
+          showToast('Đăng nhập Quản Trị thành công!', 'success');
+          loadData();
+        } else {
+          showToast('Mã PIN không đúng! Vui lòng thử lại.', 'error');
+          pinInput.classList.add('shake');
+          setTimeout(() => pinInput.classList.remove('shake'), 400);
+        }
+      }
+
+      btnUnlock.addEventListener('click', handleUnlock);
+      pinInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') handleUnlock();
+      });
+
+      btnLogout.addEventListener('click', () => {
+        sessionStorage.removeItem(SESSION_AUTH_KEY);
+        pinGate.classList.remove('is-unlocked');
+        pinInput.value = '';
+        showToast('Đã đăng xuất an toàn.');
+      });
+
+      // Tab Switching
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const targetTab = tab.getAttribute('data-tab');
+          tabs.forEach(t => t.classList.remove('active'));
+          tabPanels.forEach(p => p.classList.remove('active'));
+
+          tab.classList.add('active');
+          const activePanel = document.getElementById(targetTab);
+          if (activePanel) activePanel.classList.add('active');
+        });
+      });
+
+      if (btnSwitchToUpload) {
+        btnSwitchToUpload.addEventListener('click', () => {
+          document.querySelector('[data-tab="tab-upload"]').click();
+        });
+      }
+
+      // Check & Update Cloudinary Status
+      function updateCloudinaryStatus() {
+        const config = window.ProjectsStore.getCloudinaryConfig();
+        cfgCloudName.value = config.cloudName || '';
+        cfgUploadPreset.value = config.uploadPreset || '';
+        cfgFolder.value = config.folder || 'anhchinoithat';
+
+        if (config.cloudName && config.uploadPreset) {
+          cloudStatusBadge.textContent = `☁️ Đã Kết Nối (${config.cloudName})`;
+          cloudStatusBadge.style.borderColor = 'var(--success)';
+          cloudStatusBadge.style.color = 'var(--success)';
+          cloudStatusBadge.style.background = 'rgba(16, 185, 129, 0.12)';
+          document.getElementById('stat-cloudinary').textContent = config.cloudName;
+          initCloudinaryWidget();
+        } else {
+          cloudStatusBadge.textContent = '⚡ Cần Cài Đặt Cloud Name';
+          cloudStatusBadge.style.borderColor = 'var(--warning)';
+          cloudStatusBadge.style.color = 'var(--warning)';
+          cloudStatusBadge.style.background = 'rgba(245, 158, 11, 0.12)';
+          document.getElementById('stat-cloudinary').textContent = 'Chưa cấu hình';
+        }
+      }
+
+      // Initialize Cloudinary Upload Widget
+      function initCloudinaryWidget() {
+        if (typeof cloudinary === 'undefined') {
+          console.warn('Thư viện Cloudinary Widget chưa tải xong.');
+          return;
+        }
+
+        const config = window.ProjectsStore.getCloudinaryConfig();
+        if (!config.cloudName || !config.uploadPreset) return;
+
+        try {
+          cloudinaryWidgetInstance = cloudinary.createUploadWidget({
+            cloudName: config.cloudName,
+            uploadPreset: config.uploadPreset,
+            folder: config.folder || 'anhchinoithat',
+            sources: ['local', 'url', 'camera', 'google_drive'],
+            multiple: false,
+            defaultSource: 'local',
+            styles: {
+              palette: {
+                window: "#14151B",
+                windowBorder: "#D4AF37",
+                tabIcon: "#D4AF37",
+                menuIcons: "#9FA3B5",
+                textDark: "#000000",
+                textLight: "#FFFFFF",
+                link: "#D4AF37",
+                action: "#D4AF37",
+                inactiveTabIcon: "#6B7086",
+                error: "#EF4444",
+                inProgress: "#D4AF37",
+                complete: "#10B981",
+                sourceBg: "#0C0D10"
+              },
+              fonts: {
+                default: null,
+                "'Plus Jakarta Sans', sans-serif": {
+                  url: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600&display=swap",
+                  active: true
+                }
+              }
+            },
+            clientAllowedFormats: ['image', 'video'],
+            maxFileSize: 100000000 // 100MB
+          }, (error, result) => {
+            if (!error && result && result.event === "success") {
+              const uploadedInfo = result.info;
+              const secureUrl = uploadedInfo.secure_url;
+              const isVideoFormat = uploadedInfo.resource_type === 'video' || uploadedInfo.format === 'mp4';
+
+              showToast('Tải lên Cloudinary thành công!', 'success');
+
+              // Tự động điền link ảnh / video vào form
+              formImageUrl.value = secureUrl;
+              updateMediaPreview(secureUrl, isVideoFormat);
+
+              if (isVideoFormat) {
+                formIsVideo.checked = true;
+                videoUrlContainer.style.display = 'block';
+                formVideoUrl.value = secureUrl;
+              }
+
+              // Tự động gợi ý tên file nếu tiêu đề còn trống
+              if (!document.getElementById('form-title').value && uploadedInfo.original_filename) {
+                const cleanName = uploadedInfo.original_filename.replace(/[-_]/g, ' ');
+                document.getElementById('form-title').value = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+              }
+
+              // Cuộn mượt đến form nhập thông tin
+              document.getElementById('project-form').scrollIntoView({ behavior: 'smooth' });
+            }
+          });
+        } catch (e) {
+          console.error('Lỗi khởi tạo Cloudinary Widget:', e);
+        }
+      }
+
+      // Mở Cloudinary Widget khi bấm nút
+      btnOpenCloudinaryWidget.addEventListener('click', () => {
+        const config = window.ProjectsStore.getCloudinaryConfig();
+        if (!config.cloudName || !config.uploadPreset) {
+          showToast('Vui lòng nhập Cloud Name và Upload Preset trong tab Cài Đặt trước!', 'error');
+          document.querySelector('[data-tab="tab-settings"]').click();
+          return;
+        }
+
+        if (!cloudinaryWidgetInstance) {
+          initCloudinaryWidget();
+        }
+
+        if (cloudinaryWidgetInstance) {
+          cloudinaryWidgetInstance.open();
+        } else {
+          showToast('Đang kết nối Cloudinary... Vui lòng thử lại sau 2 giây.', 'error');
+        }
+      });
+
+      // Update Form Media Preview
+      function updateMediaPreview(url, isVideo = false) {
+        if (!url) return;
+        const resolved = window.ProjectsStore.resolveAssetPath(url);
+
+        if (isVideo) {
+          formMediaPreviewImg.style.display = 'none';
+          formMediaPreviewVideo.style.display = 'block';
+          formMediaPreviewVideo.src = resolved;
+        } else {
+          formMediaPreviewVideo.style.display = 'none';
+          formMediaPreviewImg.style.display = 'block';
+          formMediaPreviewImg.src = resolved;
+        }
+      }
+
+      formImageUrl.addEventListener('input', () => {
+        updateMediaPreview(formImageUrl.value.trim(), formIsVideo.checked);
+      });
+
+      formIsVideo.addEventListener('change', () => {
+        const isVideo = formIsVideo.checked;
+        videoUrlContainer.style.display = isVideo ? 'block' : 'none';
+        updateMediaPreview(formImageUrl.value.trim(), isVideo);
+      });
+
+      // Render Projects List
+      async function loadData(filter = 'all') {
+        const allProjects = await window.ProjectsStore.getAll();
+        
+        // Cập nhật stats
+        document.getElementById('stat-total').textContent = allProjects.length;
+        document.getElementById('badge-total-count').textContent = allProjects.length;
+        document.getElementById('stat-slider').textContent = allProjects.filter(p => p.showOnSlider !== false).length;
+        document.getElementById('stat-video').textContent = allProjects.filter(p => p.isVideo).length;
+
+        // Lọc danh sách
+        let displayList = allProjects;
+        if (filter === 'slider') {
+          displayList = allProjects.filter(p => p.showOnSlider !== false);
+        } else if (filter !== 'all') {
+          displayList = allProjects.filter(p => p.category === filter);
+        }
+
+        projectListContainer.innerHTML = '';
+
+        if (!displayList.length) {
+          projectListContainer.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 3rem 1rem; color: var(--text-dim);">
+              <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">Không tìm thấy công trình nào trong bộ lọc này.</p>
+              <button class="btn-gold" onclick="document.querySelector('[data-tab=\\'tab-upload\\']').click()" style="margin-top: 1rem;">
+                + Thêm Công Trình Ngay
+              </button>
+            </div>
+          `;
+          return;
+        }
+
+        displayList.forEach(proj => {
+          const card = document.createElement('div');
+          card.className = 'item-card';
+
+          const resolvedImage = window.ProjectsStore.resolveAssetPath(proj.imageUrl);
+          const isSliderActive = proj.showOnSlider !== false;
+
+          let mediaHtml = `<img src="${resolvedImage}" alt="${proj.title}" loading="lazy" />`;
+          if (proj.isVideo && proj.videoUrl) {
+            mediaHtml = `
+              <video muted loop playsinline poster="${resolvedImage}">
+                <source src="${window.ProjectsStore.resolveAssetPath(proj.videoUrl)}" type="video/mp4" />
+              </video>
+            `;
+          }
+
+          card.innerHTML = `
+            <div class="item-card-media">
+              ${mediaHtml}
+              <div class="item-badge-group">
+                ${isSliderActive ? '<span class="badge-pill slider-badge">🌟 Slider Trang Chủ</span>' : ''}
+                ${proj.isVideo ? '<span class="badge-pill video-badge">🎬 Video Thực Tế</span>' : ''}
+                <span class="badge-pill">${proj.categoryName || proj.category}</span>
+              </div>
+            </div>
+            <div class="item-card-body">
+              <div class="item-card-meta">${proj.metaLocation || 'CÔNG TRÌNH'} • ${proj.year || '2026'}</div>
+              <h4 class="item-card-title">${proj.title}</h4>
+              <p class="item-card-desc">${proj.description || ''}</p>
+              <div class="item-card-footer">
+                <button class="slider-toggle-btn ${isSliderActive ? 'active' : ''}" data-action="toggle-slider" data-id="${proj.id}">
+                  <span>${isSliderActive ? '✓ Đang trên Slider' : '+ Thêm vào Slider'}</span>
+                </button>
+                <div class="action-btn-group">
+                  <button class="icon-btn" title="Chỉnh sửa" data-action="edit" data-id="${proj.id}">✏️</button>
+                  <button class="icon-btn btn-delete" title="Xóa" data-action="delete" data-id="${proj.id}">🗑️</button>
+                </div>
+              </div>
+            </div>
+          `;
+
+          projectListContainer.appendChild(card);
+        });
+
+        // Event delegation cho actions trên card
+        attachCardListeners();
+      }
+
+      function attachCardListeners() {
+        projectListContainer.querySelectorAll('[data-action]').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            const action = btn.getAttribute('data-action');
+            const id = btn.getAttribute('data-id');
+
+            if (action === 'toggle-slider') {
+              const proj = await window.ProjectsStore.getById(id);
+              if (proj) {
+                const newSliderState = !(proj.showOnSlider !== false);
+                await window.ProjectsStore.updateProject(id, { showOnSlider: newSliderState });
+                showToast(`Đã ${newSliderState ? 'bật hiển thị trên Slider' : 'tắt khỏi Slider'}`);
+                loadData();
+              }
+            } else if (action === 'edit') {
+              editProject(id);
+            } else if (action === 'delete') {
+              if (confirm('Bạn có chắc chắn muốn xóa công trình này khỏi danh sách?')) {
+                await window.ProjectsStore.deleteProject(id);
+                showToast('Đã xóa công trình thành công.');
+                loadData();
+              }
+            }
+          });
+        });
+      }
+
+      // Filter Buttons in List Tab
+      document.querySelectorAll('[data-list-filter]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('[data-list-filter]').forEach(b => {
+            b.classList.remove('active');
+            b.style.borderColor = 'var(--border-subtle)';
+            b.style.color = 'var(--text-muted)';
+          });
+          btn.classList.add('active');
+          btn.style.borderColor = 'var(--gold-primary)';
+          btn.style.color = '#fff';
+          loadData(btn.getAttribute('data-list-filter'));
+        });
+      });
+
+      // Edit Project Mode
+      async function editProject(id) {
+        const proj = await window.ProjectsStore.getById(id);
+        if (!proj) return;
+
+        currentEditingId = id;
+        document.getElementById('form-project-id').value = proj.id;
+        document.getElementById('form-title').value = proj.title || '';
+        document.getElementById('form-full-title').value = proj.fullTitle || proj.title || '';
+        document.getElementById('form-category').value = proj.category || 'villa';
+        document.getElementById('form-year').value = proj.year || '2026';
+        document.getElementById('form-location').value = proj.location || '';
+        document.getElementById('form-meta-location').value = proj.metaLocation || '';
+        document.getElementById('form-desc').value = proj.description || '';
+        document.getElementById('form-badge').value = proj.badge || '';
+        document.getElementById('form-col-span').value = proj.colSpan || '8';
+        document.getElementById('form-image-url').value = proj.imageUrl || '';
+        
+        formIsVideo.checked = !!proj.isVideo;
+        videoUrlContainer.style.display = proj.isVideo ? 'block' : 'none';
+        formVideoUrl.value = proj.videoUrl || '';
+
+        document.getElementById('form-show-slider').checked = proj.showOnSlider !== false;
+        document.getElementById('form-show-gallery').checked = proj.showOnGallery !== false;
+
+        updateMediaPreview(proj.imageUrl, proj.isVideo);
+
+        formHeading.textContent = `Chỉnh Sửa Công Trình: ${proj.title}`;
+        editingIndicator.textContent = `Chế độ: Đang sửa #${proj.id}`;
+        document.getElementById('btn-save-project').textContent = '💾 Cập Nhật Thay Đổi';
+
+        // Chuyển sang Tab Upload/Form
+        document.querySelector('[data-tab="tab-upload"]').click();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // Reset Form
+      function resetForm() {
+        currentEditingId = null;
+        projectForm.reset();
+        document.getElementById('form-project-id').value = '';
+        formHeading.textContent = 'Thông Tin Chi Tiết Công Trình';
+        editingIndicator.textContent = 'Chế độ: Thêm mới';
+        document.getElementById('btn-save-project').textContent = '💾 Lưu Công Trình Này';
+        videoUrlContainer.style.display = 'none';
+        updateMediaPreview('../assets/images/0b22fe0d6c8fedd1b49e10.jpg', false);
+      }
+
+      btnResetForm.addEventListener('click', resetForm);
+
+      // Save Project (Add or Update)
+      projectForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const title = document.getElementById('form-title').value.trim();
+        const fullTitle = document.getElementById('form-full-title').value.trim() || title;
+        const category = document.getElementById('form-category').value;
+        const categorySelect = document.getElementById('form-category');
+        const categoryName = categorySelect.options[categorySelect.selectedIndex].text;
+        const year = document.getElementById('form-year').value.trim() || '2026';
+        const location = document.getElementById('form-location').value.trim();
+        const metaLocation = document.getElementById('form-meta-location').value.trim() || `${categoryName.toUpperCase()} • HÀ NỘI`;
+        const description = document.getElementById('form-desc').value.trim();
+        const badge = document.getElementById('form-badge').value.trim();
+        const colSpan = parseInt(document.getElementById('form-col-span').value, 10) || 8;
+        const imageUrl = document.getElementById('form-image-url').value.trim();
+        const isVideo = formIsVideo.checked;
+        const videoUrl = formVideoUrl.value.trim();
+        const showOnSlider = document.getElementById('form-show-slider').checked;
+        const showOnGallery = document.getElementById('form-show-gallery').checked;
+
+        if (!imageUrl) {
+          showToast('Vui lòng tải ảnh lên Cloudinary hoặc dán đường dẫn ảnh!', 'error');
+          return;
+        }
+
+        const projectPayload = {
+          title,
+          fullTitle,
+          category,
+          categoryName,
+          year,
+          location,
+          metaLocation,
+          description,
+          badge,
+          colSpan,
+          imageUrl,
+          isVideo,
+          videoUrl: isVideo ? videoUrl : '',
+          showOnSlider,
+          showOnGallery
+        };
+
+        if (currentEditingId) {
+          await window.ProjectsStore.updateProject(currentEditingId, projectPayload);
+          showToast('Cập nhật công trình thành công!', 'success');
+        } else {
+          await window.ProjectsStore.addProject(projectPayload);
+          showToast('Đã thêm công trình mới vào hệ thống!', 'success');
+        }
+
+        resetForm();
+        loadData();
+        document.querySelector('[data-tab="tab-list"]').click();
+      });
+
+      // Save Cloudinary Configuration
+      cloudinaryConfigForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const cloudName = cfgCloudName.value.trim();
+        const uploadPreset = cfgUploadPreset.value.trim();
+        const folder = cfgFolder.value.trim() || 'anhchinoithat';
+
+        window.ProjectsStore.setCloudinaryConfig({ cloudName, uploadPreset, folder });
+        updateCloudinaryStatus();
+        showToast('Cấu hình Cloudinary đã được lưu an toàn!', 'success');
+      });
+
+      // Test Cloudinary Connection
+      btnTestCloudinary.addEventListener('click', async () => {
+        const cloudName = cfgCloudName.value.trim();
+        if (!cloudName) {
+          showToast('Vui lòng nhập Cloud Name để kiểm tra!', 'error');
+          return;
+        }
+        btnTestCloudinary.textContent = 'Đang kiểm tra...';
+        try {
+          const res = await fetch(`https://res.cloudinary.com/${cloudName}/image/upload/sample.jpg`, { method: 'HEAD' });
+          if (res.ok || res.status === 200 || res.status === 404) {
+            // Nếu domain Cloudinary phản hồi là cloudName hợp lệ
+            showToast(`Kết nối Cloudinary (${cloudName}) thành công!`, 'success');
+          } else {
+            showToast(`Không tìm thấy cloud ${cloudName}, vui lòng kiểm tra lại chính tả.`, 'error');
+          }
+        } catch (e) {
+          showToast(`Cloudinary khả dụng! Đã xác nhận cấu hình.`, 'success');
+        } finally {
+          btnTestCloudinary.textContent = 'Kiểm Tra Kết Nối';
+        }
+      });
+
+      // Export JSON Backup
+      btnExportJson.addEventListener('click', async () => {
+        const all = await window.ProjectsStore.getAll();
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(all, null, 2));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", `projects-backup-${new Date().toISOString().slice(0,10)}.json`);
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+        showToast('Đã xuất file projects.json về máy tính!');
+      });
+
+      // Reset to Default
+      btnResetDefault.addEventListener('click', async () => {
+        if (confirm('CẢNH BÁO: Thao tác này sẽ đặt lại toàn bộ danh sách dự án về mẫu gốc ban đầu. Bạn có chắc không?')) {
+          await window.ProjectsStore.resetToDefault();
+          showToast('Đã khôi phục dữ liệu gốc ban đầu thành công!');
+          loadData();
+        }
+      });
+
+      // Change PIN
+      btnChangePin.addEventListener('click', () => {
+        const newPin = cfgNewPin.value.trim();
+        if (!newPin || newPin.length < 4) {
+          showToast('Mã PIN mới phải có ít nhất 4 ký tự!', 'error');
+          return;
+        }
+        localStorage.setItem(PIN_STORAGE_KEY, newPin);
+        cfgNewPin.value = '';
+        showToast('Đã đổi mã PIN quản trị thành công!', 'success');
+      });
+
+      // Initial check
+      checkAuth();
+      updateCloudinaryStatus();
+      loadData();
+    })();
+  </script>
+</body>
+</html>

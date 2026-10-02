@@ -10,6 +10,7 @@
     { "source": "/testimonials", "destination": "/pages/testimonials.html" },
     { "source": "/news", "destination": "/pages/news.html" },
     { "source": "/contact", "destination": "/pages/contact.html" },
-    { "source": "/thanks", "destination": "/pages/thanks.html" }
+    { "source": "/thanks", "destination": "/pages/thanks.html" },
+    { "source": "/admin", "destination": "/pages/admin.html" }
   ]
 }
